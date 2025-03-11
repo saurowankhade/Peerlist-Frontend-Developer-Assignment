@@ -3,8 +3,8 @@ import React from 'react'
 const Header = ({isDisable,setIsDisable}) => {
     
   return (
-    <div className="flex items-center justify-between h-[56px] border-b w-full fixed top-0 lg:w-[640px] pl-[24px] pr-[24px]">
-    <input className='text-base border-none focus:ring-0 focus:outline-none font-[600]  placeholder:text-[#959DA5] text-[#0D0D0D]' type="text" name="" id="" placeholder="Untitled form" />
+    <div className="flex items-center justify-between h-[56px] border-b border-r w-full fixed top-0 lg:w-[640px] m:pl-[24px] sm:pr-[24px] pl-[12px] pr-[12px] bg-[#fff] ">
+    <input className='text-base border-none w-[150px] focus:ring-0 focus:outline-none font-[600]  placeholder:text-[#959DA5] text-[#0D0D0D]' type="text" name="" id="" placeholder="Untitled form" />
     <button disabled={isDisable} className={` ${isDisable ? 'cursor-not-allowed' : 'cursor-pointer transition-all duration-300  shadow-[0px_3px_3px_-1.5px_#00000008] hover:shadow-[0px_12px_12px_-6px_#00000008,0px_6px_6px_-3px_#00000008,0px_3px_3px_-1.5px_#00000008]  '}  flex items-center justify-center pt-[6px] pr-[16px] pb-[6px] pl-[14px] gap-[4px] border-1 rounded-[12px] bg-[#fff] `}>
       <span className={`h-[20px] text-sm ${isDisable ? 'text-[#959DA5]' : 'text-[#0D0D0D]'  } font-[600] `}>Preview</span>
     {
