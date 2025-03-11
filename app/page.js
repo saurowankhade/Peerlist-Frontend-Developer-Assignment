@@ -1,8 +1,10 @@
 
+import HomePage from "./src/Components/HomePage";
+
 export default function Home() {
+ 
   return (
-  <div>
-    Hello Next js 
-  </div>
+   <HomePage />
+  
   );
 }
