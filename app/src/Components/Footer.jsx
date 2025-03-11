@@ -48,7 +48,7 @@ const Footer = () => {
         <span className={` w-[91px] h-[20px] text-sm ${isDisable ? 'text-[#959DA5]' : 'text-[#0D0D0D]'  } font-[600] `}>Save as Draft</span>
     </button>
 
-    <button disabled={isDisable} className={` ${isDisable ? 'cursor-not-allowed bg-[#219653]/50 border-[#219653]/50' : 'cursor-pointer bg-[#00AA45] border-[#1E874B] custom-shadow-publish'} flex items-center justify-center pt-[6px] pr-[16px] pb-[6px] pl-[14px] gap-[4px] border-1 rounded-[12px]  `}>
+    <button disabled={isDisable} className={` ${isDisable ? 'cursor-not-allowed bg-[#219653] border-[#219653] opacity-50' : 'cursor-pointer bg-[#00AA45] border-[#1E874B] custom-shadow-publish'} flex items-center justify-center pt-[6px] pr-[16px] pb-[6px] pl-[14px] gap-[4px] border-1 rounded-[12px]  `}>
     <svg
   width={16}
   height={16}
