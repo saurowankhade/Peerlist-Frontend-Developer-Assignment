@@ -1,10 +1,5 @@
-'use client';
-
-import React, { useState } from 'react'
-
-const Footer = () => {
+const Footer = ({isDisable,setIsDisable}) => {
     
-  const [isDisable,setIsDisable] = useState(true);
   return (
     <div className="h-[64px] w-full flex justify-between items-center pl-[24px] pr-[24px] fixed bg-[#F6F8FAE5]/90  bottom-0 lg:w-[640px] border-t">
       <button disabled={isDisable} className={` ${isDisable ? 'cursor-not-allowed' : 'cursor-pointer custom-shadow-draft '}  flex items-center justify-center pt-[6px] pr-[16px] pb-[6px] pl-[14px] gap-[4px] border-1 rounded-[12px] bg-[#fff] `}>
