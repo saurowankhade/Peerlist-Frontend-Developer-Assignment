@@ -1,5 +1,8 @@
 'use client';
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
+import { useSelector, useDispatch } from "react-redux";
+import { addInput, updateInput } from "../redux/formSlices";
 
 export const InputType = ({ type ,dragHandleProps }) => {
     const [options, setOptions] = useState(["Option 1", "Option 2"]); // Default option
@@ -7,6 +10,25 @@ export const InputType = ({ type ,dragHandleProps }) => {
     const [selectedDate, setSelectedDate] = useState("");
   const dateInputRef = useRef(null);
 
+  const dispatch = useDispatch();
+  const data = useSelector((state) => state.input.data);
+
+  const questionRef = useRef('');
+  const hintRef = useRef('');
+
+  useEffect(()=>{
+    hintRef.current.value = data.question || '';
+    console.log("Data : ",data);
+    
+  },[data])
+
+  const addToRedux = ()=>{
+    dispatch(updateInput({
+        nemo : 'Name is ',
+    }))
+    console.log(data);
+    
+  }
   const handleDateChange = (e) => {
     const inputDate = new Date(e.target.value);
     if (!isNaN(inputDate)) {
@@ -26,7 +48,6 @@ export const InputType = ({ type ,dragHandleProps }) => {
     const removeOption = (index) => {
         setOptions(options.filter((_, i) => i !== index));
     };
-
 
     const icons = {
         text : ()=>(
@@ -238,9 +259,12 @@ export const InputType = ({ type ,dragHandleProps }) => {
 
             <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col w-full gap-2">
-                    <input className="w-full focus:ring-0 focus:outline-none text-sm text-[#0D0D0D] font-[600] placeholder:text-[#959DA5] " type="text" name="" id="" placeholder="Write a question" />
+                    <input className="w-full focus:ring-0 focus:outline-none text-sm text-[#0D0D0D] font-[600] placeholder:text-[#959DA5] " type="text" name="" id="" placeholder="Write a question" defaultValue={questionRef.current.value} ref={questionRef} onBlur={()=>{ addToRedux() }} />
 
-                    <input className="w-full focus:ring-0 focus:outline-none text-[12px] text-[#0D0D0D] font-[400] placeholder:text-[#959DA5] " type="text" name="" id="" placeholder="Write a help text or caption (leave empty if not needed)." />
+                    <input className="w-full focus:ring-0 focus:outline-none text-[12px] text-[#0D0D0D] font-[400] placeholder:text-[#959DA5] " type="text" name="" id="" placeholder="Write a help text or caption (leave empty if not needed)." 
+                    defaultValue={hintRef.current.value} ref={hintRef} onBlur={()=>{
+                    }}
+                    />
                 </div>
                 <div className="flex gap-2 items-center">
                     <span onClick={()=>{
