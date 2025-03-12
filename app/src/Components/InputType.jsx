@@ -1,9 +1,8 @@
 'use client';
 import { useRef, useState } from "react";
 
-export const InputType = ({ type }) => {
+export const InputType = ({ type ,dragHandleProps }) => {
     const [options, setOptions] = useState(["Option 1", "Option 2"]); // Default option
-
 
     const [selectedDate, setSelectedDate] = useState("");
   const dateInputRef = useRef(null);
@@ -251,7 +250,7 @@ export const InputType = ({ type }) => {
                     }
                     </span>
 
-                    <span className=" cursor-grab  hover:border bg-white rounded-[12px]">
+                    <span {...dragHandleProps} className=" cursor-grab  hover:border bg-white rounded-[12px]">
                         <svg
                             width={24}
                             height={24}

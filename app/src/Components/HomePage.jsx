@@ -4,7 +4,8 @@ import React, { useEffect, useRef,useState } from 'react'
 import Footer from './Footer';
 import Header from './Header';
 import AddQuestionDropdown from './AddQuestionDropdown';
-import { InputType } from './InputType';
+import { InputType  } from './InputType';
+import { DragDropContext ,Droppable ,Draggable } from 'react-beautiful-dnd';
 
 const HomePage = () => {
   const [isDisable, setIsDisable] = useState(true);
@@ -35,13 +36,39 @@ const HomePage = () => {
   }, []);
 
 
+  // already data presnt then button color change and enable 
   useEffect(()=>{
     setIsDisable(data.length <= 0)
   },[data])
-  const click = (e)=>{
-    console.log(e.target.innerText);
-    
-    setData([...data, <InputType type={questionTypeName?.[e.target.innerText]} />])
+
+  // create new question 
+  const click = (e)=>{    
+    setData([...data, 
+    (props)=>(
+    <InputType  type={questionTypeName?.[e.target.innerText]} {...props} />
+  )
+  ]) 
+  }
+
+
+  // drag end 
+  const dragEnd = (result)=>{
+    const { source, destination } = result;
+
+    // If dropped outside the list, do nothing
+    if (!destination) return;
+  
+    // Create a copy of the data array
+    const newData = [...data];
+  
+    // Remove the dragged item from its original position
+    const [movedItem] = newData.splice(source.index, 1);
+  
+    // Insert it at the new position
+    newData.splice(destination.index, 0, movedItem);
+  
+    // Update the state
+    setData(newData);
   }
 
 
@@ -56,15 +83,33 @@ const HomePage = () => {
         <div className="overflow-y-auto scroll-smooth scrollbar-hide mt-10 sm:mb-12 mb-16 h-fit">
           <div className=' mt-4 md:mt-0 p-2 sm:p-12'>
             {/* Form Inputs  */}
-            <div className=''>
-              {
-                data.map((Compo,index)=>(
-                 <div key={index}>
-                  {Compo}
-                 </div>
-                ))
-              }
-            </div>
+            
+
+      <DragDropContext onDragEnd={dragEnd}>
+      <Droppable droppableId="0" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false} direction='vertical'>
+        {(provided) => (
+          <div ref={provided.innerRef} {...provided.droppableProps} className="">
+            {data.map((Compo, index) => (
+              <Draggable key={`draggable-${index}`} draggableId={`draggable-${index}`} index={index}>
+                {(provided) => (
+                  <div
+                    ref={provided.innerRef}
+                    {...provided.draggableProps}
+                    // {...provided.dragHandleProps} // Ensure draggable
+                    className="bg-white "
+                  >
+                    {/* {Compo} */}
+                    <Compo dragHandleProps={provided.dragHandleProps} />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </DragDropContext>
+
             {/* Add Form Type Button */}
             <div className='w-full mt-[24px] flex flex-col justify-center items-center'>
               <button onClick={
