@@ -4,7 +4,6 @@ import formSlices from "./formSlices";
 export const store = configureStore({
   reducer: {
     input: formSlices,
-    
   },
   
 });
