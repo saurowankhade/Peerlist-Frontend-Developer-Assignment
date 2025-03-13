@@ -1,5 +1,5 @@
 'use client';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ const Header = ({isDisable,setIsDisable,readOnly}) => {
 
   const data = useSelector((state) => state.input.data);
   const formTitle = useSelector((state) => state.input.title);
-  const [percentage,setPercentage] = useState(10);
+  const [percentage,setPercentage] = useState(0);
 
   const router = useRouter();
 
@@ -37,13 +37,13 @@ const Header = ({isDisable,setIsDisable,readOnly}) => {
     
   return (
     <div className="flex items-center justify-between h-[56px] border-b border-r w-full fixed top-0 lg:w-[640px] m:pl-[24px] sm:pr-[24px] pl-[12px] pr-[12px] bg-[#fff] ">
-    <input className='text-base border-none w-[150px] focus:ring-0 focus:outline-none font-[600]  placeholder:text-[#959DA5] text-[#0D0D0D]' type="text" name="" id="" placeholder="Untitled form" defaultValue={formTitle || ''} onBlur={setTitleToRedux}  ref={formTitileRef} readOnly={readOnly} />
+    <input className='text-base border-none w-[150px] focus:ring-0 focus:outline-none font-[600]  placeholder:text-[#959DA5] text-[#0D0D0D]' type="text" name="" id="" placeholder="Untitled form" defaultValue={formTitle || readOnly && 'Form' || ''} onBlur={setTitleToRedux}  ref={formTitileRef} readOnly={readOnly} />
 
     {
       readOnly ? 
-      <div className='flex flex-col gap-2'>
-        <span className='text-sm font-[400] text-[#0D0D0D] '>Form completeness — {percentage}%</span>
-        <div className="relative w-full h-1  bg-gray-300 rounded-full overflow-hidden">
+      <div className='flex flex-col gap-2 items-end'>
+        <span className='text-sm font-[400] text-[#0D0D0D] hidden sm:block '>Form completeness — {percentage}%</span>
+        <div className="relative w-[150px] md:w-full h-1  bg-gray-300 rounded-full overflow-hidden">
   <div
     className="h-full bg-[#00AA45] rounded-full transition-all"
     style={{ width: `${percentage}%` }}
