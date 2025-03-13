@@ -16,11 +16,6 @@ const page = () => {
     //  redux data
     const reduxData = useSelector((state) => state.input.data);
 
-    useEffect(()=>{
-        console.log("Date : ",selectedDate);
-        console.log("data : ",userData);
-        
-    },[selectedDate,userData])
 
     const handleDateChange = (index) => (e) => {
         const inputDate = new Date(e.target.value);

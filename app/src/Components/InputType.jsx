@@ -57,7 +57,6 @@ export const InputType = ({ type ,dragHandleProps ,index ,id }) => {
         questionType : type,
         ...(type === 'radio' ? { options: [...options] } : {})
     }))
-    console.log(data); 
    }
   }
 
@@ -313,7 +312,6 @@ useEffect(() => {
                 <div className="flex flex-col w-full gap-2">
                     <input className={`w-full focus:ring-0 focus:outline-none text-sm text-[#0D0D0D] font-[600] placeholder:text-[#959DA5] ${isFocus && 'placeholder:text-[#EB5757] '} `} type="text" name="" id="" placeholder="Write a question" defaultValue={questionRef.current.value} ref={questionRef} onBlur={()=>{ 
                         addToRedux()
-                        console.log(data);
                         
                         if(data[id]?.id === index && data[id]?.isQuestion === false){
                             setIsFocus(true)

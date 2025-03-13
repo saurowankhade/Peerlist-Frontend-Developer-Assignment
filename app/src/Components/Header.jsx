@@ -40,6 +40,7 @@ const Header = ({isDisable,setIsDisable,readOnly,userData=[]}) => {
     const perPercentage = 100 / formTotal;
     const userDataLength = userData.length || 0;
     setPercentage( Math.floor(userDataLength * perPercentage) || 0)
+    
   },[userData])
     
   return (
