@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AddQuestionDropdown = ({dropdownRef,click,setIsShowQuestionType}) => {
+const AddQuestionDropdown = ({dropdownRef,click,setIsShowQuestionType,className= ''}) => {
       const inputType = [
         {
           id:1,
@@ -186,16 +186,25 @@ const AddQuestionDropdown = ({dropdownRef,click,setIsShowQuestionType}) => {
         }
     
       ];
+
+      const questionTypeName = {
+        'Short answer':'text',
+        'Long answer' : 'textarea',
+        'Single select' : 'radio',
+        'URL' : 'uri',
+        'Date' : 'date',
+      }
+      
       
   return (
-    <div  ref={dropdownRef}  className={`relative mt-2 w-[300px] bg-[#fff] p-[4px] rounded-[16px] border gap-[8px] custom-shadow-show-type `}>
+    <div  ref={dropdownRef}  className={`${className ? className : 'relative'} z-50 mt-2 w-[150px] md:w-[300px] bg-[#fff] p-[4px] rounded-[16px] border gap-[8px] custom-shadow-show-type ${className} `}>
                 <div className='w-full'>
                   <div className='h-[36px] rounded-[8px] gap-[16px] pt-2 pr-4 pb-2 pl-4 bg-[#FAFBFC] text-[#6A737D] font-[400] text-[12px] uppercase '>Input Type</div>
                 </div>
                 {
                   inputType.map((inputData)=>(
                     <button onClick={(e)=>{
-                      click(e)
+                      click(questionTypeName?.[e.target.innerText])
                       setIsShowQuestionType(false)
                       
                     }} className='

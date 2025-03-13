@@ -16,13 +16,6 @@ const HomePage = () => {
 
   const dropdownRef = useRef(null);
 
-  const questionTypeName = {
-    'Short answer':'text',
-    'Long answer' : 'textarea',
-    'Single select' : 'radio',
-    'URL' : 'uri',
-    'Date' : 'date',
-  }
 
   // questionTypeDropDown un-visible on click outside
   useEffect(() => {
@@ -57,19 +50,17 @@ const HomePage = () => {
    
 };
 
-const click = (e)=>{    
+const click = (result)=>{    
 
   const newId = reduxData.length; // Get the next index based on existing data
 
   dispatch(addInput({
     id: newId,
-    questionType: questionTypeName?.[e.target.innerText],
+    questionType: result,
         hint : '',
         isHint : false ,
-      ...(questionTypeName?.[e.target.innerText] === 'radio' ? { options: [] } : {})
+      ...(result === 'radio' ? { options: [] } : {})
   }));
-
-
   }
 
   return (

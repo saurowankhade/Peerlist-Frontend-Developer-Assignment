@@ -3,11 +3,26 @@ import { useEffect, useRef, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
 import { addInput } from "../redux/formSlices";
+import AddQuestionDropdown from "./AddQuestionDropdown";
 
 export const InputType = ({ type ,dragHandleProps ,index ,id }) => {
     const [options, setOptions] = useState(["Option 1", "Option 2"]); // Default option
     const [selectedDate, setSelectedDate] = useState("");
     const dateInputRef = useRef(null);
+
+    const [isShowQuestionType,setIsShowQuestionType] = useState(false);
+    
+      const dropdownRef = useRef(null);
+      useEffect(() => {
+          function handleClickOutside(event) {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+              setIsShowQuestionType(false); 
+            }
+          }
+      
+          document.addEventListener("mousedown", handleClickOutside);
+          return () => document.removeEventListener("mousedown", handleClickOutside);
+        }, []); 
 
   const dispatch = useDispatch();
   const data = useSelector((state) => state.input.data);
@@ -280,6 +295,15 @@ useEffect(() => {
         )
 
     }
+    const click = (clickText)=>{        
+      dispatch(addInput({
+        id: index,
+        questionType:  clickText,
+            hint : '',
+            isHint : false ,
+          ...(clickText=== 'radio' ? { options: [] } : {})
+      }));
+      }
 
     return (
         <div className="border p-4 mb-4 gap-2 flex flex-col rounded-[16px] hover:bg-[#FAFBFC]">
@@ -293,13 +317,19 @@ useEffect(() => {
                     defaultValue={hintRef.current.value} ref={hintRef} onBlur={addToRedux}
                     />
                 </div>
-                <div className="flex gap-2 items-center">
+                <div className="flex gap-2 items-center relative ">
                     <span onClick={()=>{
-                    }} className="">
+                        setIsShowQuestionType(true)
+                    }} className=" cursor-pointer">
                     {
                          icons?.[type]()
                     }
                     </span>
+                    {
+                isShowQuestionType && (
+                 <AddQuestionDropdown click={click} className={' absolute top-4 md:right-0 -right-1 '} setIsShowQuestionType={setIsShowQuestionType} dropdownRef={dropdownRef} /> 
+                )
+              }
 
                     <span {...dragHandleProps} className=" cursor-grab  hover:border bg-white rounded-[12px]">
                         <svg
