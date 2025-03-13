@@ -1,13 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  data: [], // This holds all inputs
+    title : '',
+  data: [], 
 };
 
 const formSlice = createSlice({
   name: "input",
   initialState,
   reducers: {
+    setTitle: (state, action) => {
+      state.title = action.payload; // Update the title
+    },
     addInput: (state, action) => {
         const { id } = action.payload;
         const existingInput = state.data.find((item) => item.id === id);
@@ -27,11 +31,12 @@ const formSlice = createSlice({
     //     state.data.push(action.payload); // Add new input
     //   }
 
-    }, reorderInputs: (state, action) => {
+    }, 
+    reorderInputs: (state, action) => {
         state.data = action.payload; // Update the order in Redux
       },
   },
 });
 
-export const { addInput, reorderInputs } = formSlice.actions;
+export const { setTitle,addInput, reorderInputs } = formSlice.actions;
 export default formSlice.reducer;
