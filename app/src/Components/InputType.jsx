@@ -50,6 +50,7 @@ export const InputType = ({ type ,dragHandleProps ,index ,id }) => {
     dispatch(addInput({
         id : index,
         question : questionRef.current.value,
+        isQuestion : questionRef.current.value ? true : false,
         hint : hintRef.current.value,
         isHint : hintRef.current.value ? true : false,
         questionType : type,
@@ -299,6 +300,7 @@ useEffect(() => {
       dispatch(addInput({
         id: index,
         questionType:  clickText,
+        isQuestion : questionRef.current.value ? true : false,
             hint : '',
             isHint : false ,
           ...(clickText=== 'radio' ? { options: [] } : {})
@@ -307,8 +309,6 @@ useEffect(() => {
 
     return (
         <div className="border p-4 mb-4 gap-2 flex flex-col rounded-[16px] hover:bg-[#FAFBFC]">
-
-
             <div className="flex items-center justify-between gap-2">
                 <div className="flex flex-col w-full gap-2">
                     <input className="w-full focus:ring-0 focus:outline-none text-sm text-[#0D0D0D] font-[600] placeholder:text-[#959DA5] " type="text" name="" id="" placeholder="Write a question" defaultValue={questionRef.current.value} ref={questionRef} onBlur={()=>{ addToRedux() }} />
@@ -327,7 +327,7 @@ useEffect(() => {
                     </span>
                     {
                 isShowQuestionType && (
-                 <AddQuestionDropdown click={click} className={' absolute top-4 md:right-0 -right-1 '} setIsShowQuestionType={setIsShowQuestionType} dropdownRef={dropdownRef} /> 
+                 <AddQuestionDropdown click={click} className={' absolute top-4  md:right-0 -right-1 '} setIsShowQuestionType={setIsShowQuestionType} dropdownRef={dropdownRef} /> 
                 )
               }
 

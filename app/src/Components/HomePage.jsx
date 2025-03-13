@@ -59,7 +59,8 @@ const click = (result)=>{
     questionType: result,
         hint : '',
         isHint : false ,
-      ...(result === 'radio' ? { options: [] } : {})
+      ...(result === 'radio' ? { options: [] } : {}),
+      isQuestion : false,
   }));
   }
 

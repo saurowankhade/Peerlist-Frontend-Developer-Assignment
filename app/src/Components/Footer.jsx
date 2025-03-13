@@ -1,10 +1,15 @@
+import { useSelector } from "react-redux";
+
 const Footer = ({isDisable,setIsDisable}) => {
-    
+  const data = useSelector((state) => state.input.data);
+  
   return (
     <div className="h-[64px] w-full flex justify-between items-center 
     sm:pl-[24px] sm:pr-[24px] pl-[12px] pr-[12px]
     fixed bg-[#F6F8FAE5]/90  bottom-0 lg:w-[640px] border-t">
-      <button disabled={isDisable} className={` ${isDisable ? 'cursor-not-allowed' : 'cursor-pointer custom-shadow-draft '}  flex items-center justify-center pt-[6px] pr-[16px] pb-[6px] pl-[14px] gap-[4px] border-1 rounded-[12px] bg-[#fff] `}>
+      <button onClick={()=>{
+
+      }} disabled={isDisable} className={` ${isDisable ? 'cursor-not-allowed' : 'cursor-pointer custom-shadow-draft '}  flex items-center justify-center pt-[6px] pr-[16px] pb-[6px] pl-[14px] gap-[4px] border-1 rounded-[12px] bg-[#fff] `}>
        {
         isDisable ?  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M13.1668 7.33337V6.66671C13.1668 4.15255 13.1668 2.89547 12.3857 2.11442C11.6047 1.33337 10.3476 1.33337 7.83347 1.33337H7.16687C4.65272 1.33337 3.39564 1.33337 2.6146 2.11441C1.83355 2.89545 1.83354 4.15252 1.83352 6.66666L1.8335 9.33337C1.83347 11.8475 1.83346 13.1046 2.61448 13.8856C3.39553 14.6666 4.65265 14.6667 7.1668 14.6667" stroke="#959DA5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
