@@ -3,7 +3,7 @@
 **A Next.js form builder app that allows users to create, preview, and submit forms with different question types.**  
 
 ## 📌 Live Demo  
-[🔗 Hosted Link]([your-live-demo-link](https://peerlist-assignment-saurabh.vercel.app/))
+[🔗 Hosted Link](https://peerlist-assignment-saurabh.vercel.app/)
 
 ## Screenshot
 ![image](https://github.com/user-attachments/assets/f5a7f5de-919a-4367-b929-c4a3326d7c1d)
@@ -39,7 +39,7 @@ git clone https://github.com/saurowankhade/Peerlist-Frontend-Developer-Assignmen
 ```
 2️⃣ Navigate to the project folder:
 ```bash
-cd peerlist-form-builder
+cd Peerlist-Frontend-Developer-Assignment
 ```
 3️⃣ Install dependencies:
 ```bash
