@@ -16,8 +16,6 @@ const HomePage = () => {
 
   const dropdownRef = useRef(null);
 
-  const [data,setData] = useState([]);
-
   const questionTypeName = {
     'Short answer':'text',
     'Long answer' : 'textarea',
@@ -39,37 +37,12 @@ const HomePage = () => {
   }, []);
 
 
-  // already data presnt then button color change and enable 
-  useEffect(()=>{
-    setIsDisable(data.length <= 0)
-  },[data])
-
-  // create new question 
- 
-
-  // // drag end 
-  // const dragEnd = (result)=>{
-  //   const { source, destination } = result;
-
-  //   // If dropped outside the list, do nothing
-  //   if (!destination) return;
-  
-  //   // Create a copy of the data array
-  //   const newData = [...data];
-  
-  //   // Remove the dragged item from its original position
-  //   const [movedItem] = newData.splice(source.index, 1);
-  
-  //   // Insert it at the new position
-  //   newData.splice(destination.index, 0, movedItem);
-  
-  //   // Update the state
-  //   setData(newData);
-  // }
-
-
   const dispatch = useDispatch();
   const reduxData = useSelector((state) => state.input.data); // Get Redux data
+
+  useEffect(()=>{
+    setIsDisable(reduxData.length <= 0)
+  },[reduxData])
   
   const dragEnd = (result) => {
     const { source, destination } = result;
@@ -81,8 +54,6 @@ const HomePage = () => {
     newData.splice(destination.index, 0, movedItem);
 
     dispatch(reorderInputs(newData)); 
-
-
    
 };
 
@@ -100,14 +71,6 @@ const click = (e)=>{
 
 
   }
-
-  useEffect(()=>{
-    console.log("Redux : ",reduxData);
-    
-  },[reduxData])
-
-
-
 
   return (
     <div className="w-full items-center flex flex-col justify-center h-screen">
@@ -136,7 +99,7 @@ const click = (e)=>{
                     className="bg-white "
                   >
                     {/* {Compo} */}
-                    <InputType index={items?.id} key={items?.id} type={items?.questionType} dragHandleProps={provided.dragHandleProps} />
+                    <InputType index={items?.id} id={index} key={items?.id} type={items?.questionType} dragHandleProps={provided.dragHandleProps} />
                     {/* <Compo index={index}  /> */}
                   </div>
                 )}

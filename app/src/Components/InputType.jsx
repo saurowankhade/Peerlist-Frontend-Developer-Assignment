@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addInput } from "../redux/formSlices";
 
-export const InputType = ({ type ,dragHandleProps ,index }) => {
+export const InputType = ({ type ,dragHandleProps ,index ,id }) => {
     const [options, setOptions] = useState(["Option 1", "Option 2"]); // Default option
     const [selectedDate, setSelectedDate] = useState("");
     const dateInputRef = useRef(null);
@@ -17,14 +17,13 @@ export const InputType = ({ type ,dragHandleProps ,index }) => {
 
   useEffect(() => {
     if (questionRef.current) {
-        questionRef.current.value = data[index]?.question || '';
-        hintRef.current.value = data[index]?.hint || '' ;
+        
+        questionRef.current.value = data[id]?.id === index ? data[id]?.question || '' : '';
+        hintRef.current.value = data[id]?.id === index ? data[id]?.hint || '' : '' ;
         setOptions(
-            data[index]?.options && data[index].options.length > 0 
-              ? data[index].options 
-              : ["Option 1", "Option 2"]
+            data[id]?.id === index && data[id]?.options?.length > 0 ? data[id].options : ["Option 1", "Option 2"] 
           );
-        type = data[index]?.questionType || type;
+        
     }
 }, [index]); 
 
