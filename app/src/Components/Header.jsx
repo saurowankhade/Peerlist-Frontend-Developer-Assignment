@@ -49,8 +49,8 @@ const Header = ({isDisable,setIsDisable,readOnly,userData=[]}) => {
 
     {
       readOnly ? 
-      <div className='flex flex-col gap-2 items-end'>
-        <span className='text-sm font-[400] text-[#0D0D0D] hidden sm:block '>Form completeness — {percentage}%</span>
+      <div className='flex flex-col gap-2 items-end pr-1 sm:pr-0'>
+        <span className='text-sm font-[400] text-[#0D0D0D] flex items-center gap-1 '>Form <span className='hidden sm:block '> completeness </span> — {percentage}%</span>
         <div className="relative w-[150px] md:w-full h-1  bg-gray-300 rounded-full overflow-hidden">
   <div
     className="h-full bg-[#00AA45] rounded-full transition-all"
