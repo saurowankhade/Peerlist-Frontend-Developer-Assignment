@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { setTitle } from '../redux/formSlices';
 import { useRouter } from 'next/navigation';
 
-const Header = ({isDisable,setIsDisable,readOnly}) => {
+const Header = ({isDisable,setIsDisable,readOnly,userData=[]}) => {
 
   const data = useSelector((state) => state.input.data);
   const formTitle = useSelector((state) => state.input.title);
@@ -34,6 +34,13 @@ const Header = ({isDisable,setIsDisable,readOnly}) => {
   const setTitleToRedux = ()=>{
     dispatch(setTitle(formTitileRef.current.value));
   }
+
+  useEffect(()=>{
+    const formTotal = data.length ;
+    const perPercentage = 100 / formTotal;
+    const userDataLength = userData.length || 0;
+    setPercentage( Math.floor(userDataLength * perPercentage) || 0)
+  },[userData])
     
   return (
     <div className="flex items-center justify-between h-[56px] border-b border-r w-full fixed top-0 lg:w-[640px] m:pl-[24px] sm:pr-[24px] pl-[12px] pr-[12px] bg-[#fff] ">

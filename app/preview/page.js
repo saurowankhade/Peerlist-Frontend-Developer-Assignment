@@ -1,37 +1,98 @@
 'use client';
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Header from '../src/Components/Header'
 import { useSelector } from 'react-redux';
 import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 const page = () => {
-    const [selectedDate, setSelectedDate] = useState("");
-    const dateInputRef = useRef(null);
+    const [selectedDate, setSelectedDate] = useState([]);
 
     const [userData,setUserData] = useState([]);
-
+    const inputRef = useRef([]);
     const router = useRouter();
  
+   
     //  redux data
     const reduxData = useSelector((state) => state.input.data);
 
-    const handleDateChange = (e) => {
+    useEffect(()=>{
+        console.log("Date : ",selectedDate);
+        console.log("data : ",userData);
+        
+    },[selectedDate,userData])
+
+    const handleDateChange = (index) => (e) => {
         const inputDate = new Date(e.target.value);
         if (!isNaN(inputDate)) {
             const formattedDate = `${String(inputDate.getMonth() + 1).padStart(2, "0")}-${String(
                 inputDate.getDate()
             ).padStart(2, "0")}-${inputDate.getFullYear()}`;
-            setSelectedDate(formattedDate);
+            addUserData(index,formattedDate)
+            setSelectedDate((prev) => ({
+                ...prev,
+                [index]: formattedDate, // Store selected date for the specific index
+            }));
         }
     };
 
+    const addUserData = (id, answer) => {
+        setUserData((prevUserData) => {
+            const existingIndex = prevUserData.findIndex((item) => item.id === id);
+    
+            if (existingIndex !== -1) {
+                if (answer.trim() === "") {
+                    // If answer is empty, remove the entry
+                    return prevUserData.filter((item) => item.id !== id);
+                } else {
+                    // If the ID already exists, update the existing object
+                    const updatedData = [...prevUserData];
+                    updatedData[existingIndex] = {
+                        ...updatedData[existingIndex],
+                        question: reduxData[id]?.question,
+                        answer: answer,
+                        questionType: reduxData[id]?.questionType,
+                    };
+                    return updatedData;
+                }
+            } else {
+                // If ID doesn't exist, add a new entry (only if answer is not empty)
+                return answer.trim() === ""
+                    ? prevUserData
+                    : [
+                        ...prevUserData,
+                        {
+                            id: id,
+                            question: reduxData[id]?.question,
+                            answer: answer,
+                            questionType: reduxData[id]?.questionType,
+                        },
+                    ];
+            }
+        });
+    };
 
+
+    const handleSubmit = ()=>{
+        if(userData.length === reduxData.length){
+            toast.success('Form Filled Successfully')
+            setUserData([]);
+            inputRef.current.forEach((ref) => {
+                if (ref) ref.value = ""; // Clear input values
+            });
+            inputRef.current = []; 
+            setSelectedDate([])
+        } else{
+            toast.error('Fill all the form')
+        }
+    }
+    
     return (
         <div className="w-full items-center flex flex-col justify-center h-screen">
             <div className="lg:w-[640px] w-full flex flex-col border-[1px] relative h-full">
                 {/*  Header */}
 
-                <Header readOnly={true} />
+                <Header readOnly={true} userData={userData} />
 
                 {/* Body */}
                 {
@@ -43,7 +104,8 @@ const page = () => {
     
     
                             {
-                                reduxData.map((item) => (
+                                reduxData.map((item , index) => (
+                                    
                                     <div key={item?.id} className={` ${item?.questionType === 'radio' ? 'gap-4' : 'gap-1.5'} flex flex-col mb-[27px] `}>
     
                                         <div>
@@ -51,38 +113,57 @@ const page = () => {
                                             <div className={` ${item?.isHint ? 'block' : 'hidden'} font-[400] text-[12px] text-[#0D0D0D] `}>{item?.hint}</div>
                                         </div>
     
-                                        <div className="">
+                                        <div>
                                             {item?.questionType === "radio" ?
                                                 (
                                                     <div className="w-full">
-                                                        {item?.options.map((opt, i) => (
-                                                            <div key={i} className="flex w-full items-center space-x-2 mb-2">
-                                                                <label className='flex gap-4 items-center'>
-                                                                    <input className='h-4 w-4 accent-[#00AA45]' type="radio" name="option" value={opt} /> {opt}
-                                                                </label>
-                                                            </div>
-                                                        ))}
+                                                        {item?.options.map((opt, i) => {
+                                                            return (
+                                                                <div key={i} className="flex w-full items-center space-x-2 mb-2">
+                                                                    <label className='flex gap-4 items-center'>
+                                                                        <input 
+                                                                        ref={(ref) => (inputRef.current[index] = ref)}
+                                                                         className='h-4 w-4 accent-[#00AA45]' type="radio"   name={`option-${item.id}`}  
+                                                                         value={opt} 
+                                                                         onChange={(e) => addUserData(index, e.target.value)}
+                                                                         /> {opt}
+
+                                                                    </label>
+                                                                </div>
+                                                            )
+                                                        })}
     
                                                     </div>
                                                 ) :
                                                 item?.questionType === 'textarea' ? (
-                                                    <textarea className="text-left p-2  w-full border h-[80px] pt-[6px] pr-2 pb-[6px] pl-2 resize-none rounded-[8px] gap-1  focus:ring-0 focus:outline-none bg-[#fff] shadow-input" />
+                                                    <textarea className="text-left p-2  w-full border h-[80px] pt-[6px] pr-2 pb-[6px] pl-2 resize-none rounded-[8px] gap-1  focus:ring-0 focus:outline-none bg-[#fff] shadow-input"
+                                                    ref={(ref) => (inputRef.current[index] = ref)}
+                                                     
+                                                      defaultValue={''} 
+                                                      onBlur={()=>{addUserData(index,inputRef.current[index].value)
+                                                      }} />
                                                 ) :
                                                     item?.questionType === 'date' ? (
-                                                        <div className="relative w-full group " onClick={() => dateInputRef.current?.showPicker()}>
+                                                        <div className="relative w-full group " onClick={() => inputRef.current[index]?.showPicker()}>
                                                             {/* Hidden Date Input */}
                                                             <input
                                                                 type="date"
-                                                                ref={dateInputRef}
-                                                                onChange={handleDateChange}
+                                                                // ref={dateInputRef}
+                                                                onChange={
+                                                                    handleDateChange(index)}
                                                                 className="absolute shadow-input inset-0 w-full h-full opacity-0 cursor-pointer"
+                                                                ref={(ref) => (inputRef.current[index] = ref)}
+                                                     
+                                                      defaultValue={''} 
+                                                      
                                                             />
     
     
                                                             <div
                                                                 className="flex shadow-input items-center justify-between w-full p-2 border bg-[#fff] rounded-[8px] cursor-pointer"
+                                                                
                                                             >
-                                                                <span className={` ${selectedDate ? 'text-[#0D0D0D]' : 'text-[#959DA5]'} text-sm font-[400] `}>{selectedDate || "MM-DD-YYYY"}</span>
+                                                                <span className={` ${selectedDate[index] ? 'text-[#0D0D0D]' : 'text-[#959DA5]'} text-sm font-[400] `}>{selectedDate[index] || "MM-DD-YYYY"}</span>
     
                                                                 <svg className="icon-default block group-hover:hidden"
                                                                     width={16}
@@ -192,32 +273,30 @@ const page = () => {
                                                     )
                                                         :
                                                         (
-                                                            <input type={item?.questionType} className={` shadow-input text-left p-2  w-full border   h-[32px] rounded-[8px] gap-1  focus:ring-0 focus:outline-none bg-[#fff]`} />
+                                                            <input type={item?.questionType} className={` shadow-input text-left p-2  w-full border   h-[32px] rounded-[8px] gap-1  focus:ring-0 focus:outline-none bg-[#fff]`} ref={(ref) => (inputRef.current[index] = ref)}
+                                                     
+                                                            defaultValue={''} 
+                                                            onBlur={()=>{addUserData(index,inputRef.current[index].value)
+                                                            }} />
     
                                                         )
                                             }
     
                                         </div>
-    
-    
                                     </div>
                                 ))
                             }
     
     
                             {/* Submit button */}
-    
-                            {
-                                reduxData?.length > 0 && (
                                     <div className='w-full mt-[24px] flex flex-col justify-end items-end'>
-                                        <button className={` custom-shadow-add-que cursor-pointer flex items-center justify-end  gap-[4px] border-1 pt-[6px] pr-[16px] pb-[6px] pl-[14px] rounded-[12px]  bg-[#00AA45] border-[#1E874B] text-[#FFFFFF]`}>
+                                        <button onClick={handleSubmit} className={` custom-shadow-add-que cursor-pointer flex items-center justify-end  gap-[4px] border-1 pt-[6px] pr-[16px] pb-[6px] pl-[14px] rounded-[12px]  bg-[#00AA45] border-[#1E874B] text-[#FFFFFF]`}>
     
                                             <span className=' text-sm text-[##0D0D0D] font-[600] '>Save</span>
                                         </button>
     
                                     </div>
-                                )
-                            }
+                                
     
                         </div>
                         
