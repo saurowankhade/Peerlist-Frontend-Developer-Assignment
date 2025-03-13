@@ -6,6 +6,9 @@ import Header from './Header';
 import AddQuestionDropdown from './AddQuestionDropdown';
 import { InputType  } from './InputType';
 import { DragDropContext ,Droppable ,Draggable } from 'react-beautiful-dnd';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { addInput, reorderInputs } from '../redux/formSlices';
 
 const HomePage = () => {
   const [isDisable, setIsDisable] = useState(true);
@@ -42,34 +45,68 @@ const HomePage = () => {
   },[data])
 
   // create new question 
-  const click = (e)=>{    
-    setData([...data, 
-    (props)=>(
-    <InputType  type={questionTypeName?.[e.target.innerText]} {...props} />
-  )
-  ]) 
-  }
+ 
+
+  // // drag end 
+  // const dragEnd = (result)=>{
+  //   const { source, destination } = result;
+
+  //   // If dropped outside the list, do nothing
+  //   if (!destination) return;
+  
+  //   // Create a copy of the data array
+  //   const newData = [...data];
+  
+  //   // Remove the dragged item from its original position
+  //   const [movedItem] = newData.splice(source.index, 1);
+  
+  //   // Insert it at the new position
+  //   newData.splice(destination.index, 0, movedItem);
+  
+  //   // Update the state
+  //   setData(newData);
+  // }
 
 
-  // drag end 
-  const dragEnd = (result)=>{
+  const dispatch = useDispatch();
+  const reduxData = useSelector((state) => state.input.data); // Get Redux data
+  
+  const dragEnd = (result) => {
     const { source, destination } = result;
 
-    // If dropped outside the list, do nothing
-    if (!destination) return;
-  
-    // Create a copy of the data array
-    const newData = [...data];
-  
-    // Remove the dragged item from its original position
+    if (!destination) return; // If dropped outside, do nothing
+
+    const newData = [...reduxData]; // Clone Redux state
     const [movedItem] = newData.splice(source.index, 1);
-  
-    // Insert it at the new position
     newData.splice(destination.index, 0, movedItem);
-  
-    // Update the state
-    setData(newData);
+
+    dispatch(reorderInputs(newData)); 
+
+
+   
+};
+
+const click = (e)=>{    
+
+  const newId = reduxData.length; // Get the next index based on existing data
+
+  dispatch(addInput({
+    id: newId,
+    questionType: questionTypeName?.[e.target.innerText],
+        hint : '',
+        isHint : false ,
+      ...(questionTypeName?.[e.target.innerText] === 'radio' ? { options: [] } : {})
+  }));
+
+
   }
+
+  useEffect(()=>{
+    console.log("Redux : ",reduxData);
+    
+  },[reduxData])
+
+
 
 
   return (
@@ -89,7 +126,7 @@ const HomePage = () => {
       <Droppable droppableId="0" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false} direction='vertical'>
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps} className="">
-            {data.map((Compo, index) => (
+            {reduxData.map((items, index) => (
               <Draggable key={`draggable-${index}`} draggableId={`draggable-${index}`} index={index}>
                 {(provided) => (
                   <div
@@ -99,7 +136,8 @@ const HomePage = () => {
                     className="bg-white "
                   >
                     {/* {Compo} */}
-                    <Compo dragHandleProps={provided.dragHandleProps} />
+                    <InputType index={items?.id} key={items?.id} type={items?.questionType} dragHandleProps={provided.dragHandleProps} />
+                    {/* <Compo index={index}  /> */}
                   </div>
                 )}
               </Draggable>

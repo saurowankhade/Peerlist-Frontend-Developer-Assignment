@@ -2,13 +2,12 @@
 import { useEffect, useRef, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { addInput, updateInput } from "../redux/formSlices";
+import { addInput } from "../redux/formSlices";
 
-export const InputType = ({ type ,dragHandleProps }) => {
+export const InputType = ({ type ,dragHandleProps ,index }) => {
     const [options, setOptions] = useState(["Option 1", "Option 2"]); // Default option
-
     const [selectedDate, setSelectedDate] = useState("");
-  const dateInputRef = useRef(null);
+    const dateInputRef = useRef(null);
 
   const dispatch = useDispatch();
   const data = useSelector((state) => state.input.data);
@@ -16,19 +15,49 @@ export const InputType = ({ type ,dragHandleProps }) => {
   const questionRef = useRef('');
   const hintRef = useRef('');
 
-  useEffect(()=>{
-    hintRef.current.value = data.question || '';
-    console.log("Data : ",data);
-    
-  },[data])
+  useEffect(() => {
+    if (questionRef.current) {
+        questionRef.current.value = data[index]?.question || '';
+        hintRef.current.value = data[index]?.hint || '' ;
+        setOptions(
+            data[index]?.options && data[index].options.length > 0 
+              ? data[index].options 
+              : ["Option 1", "Option 2"]
+          );
+        type = data[index]?.questionType || type;
+    }
+}, [index]); 
+
+//
+
 
   const addToRedux = ()=>{
-    dispatch(updateInput({
-        nemo : 'Name is ',
+   if(questionRef.current.value ){
+    dispatch(addInput({
+        id : index,
+        question : questionRef.current.value,
+        hint : hintRef.current.value,
+        isHint : hintRef.current.value ? true : false,
+        questionType : type,
+        ...(type === 'radio' ? { options: [...options] } : {})
+
     }))
-    console.log(data);
-    
+    console.log(data); 
+   }
   }
+
+  const handleOptionChange = (index, value) => {
+    const newOptions = [...options];
+    newOptions[index] = value;
+    setOptions(newOptions); // Updates options state
+};
+
+useEffect(() => {
+    addToRedux();
+}, [options]); 
+
+
+
   const handleDateChange = (e) => {
     const inputDate = new Date(e.target.value);
     if (!isNaN(inputDate)) {
@@ -262,8 +291,7 @@ export const InputType = ({ type ,dragHandleProps }) => {
                     <input className="w-full focus:ring-0 focus:outline-none text-sm text-[#0D0D0D] font-[600] placeholder:text-[#959DA5] " type="text" name="" id="" placeholder="Write a question" defaultValue={questionRef.current.value} ref={questionRef} onBlur={()=>{ addToRedux() }} />
 
                     <input className="w-full focus:ring-0 focus:outline-none text-[12px] text-[#0D0D0D] font-[400] placeholder:text-[#959DA5] " type="text" name="" id="" placeholder="Write a help text or caption (leave empty if not needed)." 
-                    defaultValue={hintRef.current.value} ref={hintRef} onBlur={()=>{
-                    }}
+                    defaultValue={hintRef.current.value} ref={hintRef} onBlur={addToRedux}
                     />
                 </div>
                 <div className="flex gap-2 items-center">
@@ -309,9 +337,7 @@ export const InputType = ({ type ,dragHandleProps }) => {
                                 type="text"
                                 value={opt}
                                 onChange={(e) => {
-                                    const newOptions = [...options];
-                                    newOptions[i] = e.target.value;
-                                    setOptions(newOptions);
+                                    handleOptionChange(i, e.target.value)
                                 }}
                                 className="border p-1 rounded-[8px]  shadow-[0px 1px 1px -0.5px #00000008] pt-1.5 pr-2 pb-1.5 pl-2  w-full focus:ring-0 focus:outline-none text-sm font-[400] text-[#0D0D0D] shadow-input"
                             />

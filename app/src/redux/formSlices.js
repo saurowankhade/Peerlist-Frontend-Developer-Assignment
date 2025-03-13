@@ -1,23 +1,37 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  data: [],
+  data: [], // This holds all inputs
 };
 
-const formSlices = createSlice({
+const formSlice = createSlice({
   name: "input",
   initialState,
   reducers: {
     addInput: (state, action) => {
-        state.formData = { ...state.formData, ...action.payload };
+        const { id } = action.payload;
+        const existingInput = state.data.find((item) => item.id === id);
+  
+        if (existingInput) {
+          // Update existing input
+          Object.assign(existingInput, action.payload);
+        } else {
+          // Add new input
+          state.data.push({ ...action.payload });
+        }
+
+    //     const existingIndex = state.data.findIndex(item => item.id === action.payload.id);
+    //   if (existingIndex !== -1) {
+    //     state.data[existingIndex] = action.payload; // Update existing input
+    //   } else {
+    //     state.data.push(action.payload); // Add new input
+    //   }
+
+    }, reorderInputs: (state, action) => {
+        state.data = action.payload; // Update the order in Redux
       },
-    updateInput: (state, action) => {
-      const { id, field, value } = action.payload;
-      const item = state.data.find((item) => item.id === id);
-      if (item) item[field] = value;
-    },
   },
 });
 
-export const { addInput, updateInput } = formSlices.actions;
-export default formSlices.reducer;
+export const { addInput, reorderInputs } = formSlice.actions;
+export default formSlice.reducer;
