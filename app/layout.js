@@ -2,6 +2,7 @@ import {Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./Provider";
 import { Toaster } from "react-hot-toast";
+import Link from "next/link";
 
 const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
@@ -14,8 +15,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
        <Providers>
+       {/* <Link href="/preview">About</Link> */}
        {children}
        </Providers>
+       
        <Toaster />
       </body>
     </html>
