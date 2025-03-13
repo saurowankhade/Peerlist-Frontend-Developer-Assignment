@@ -1,14 +1,18 @@
+'use client';
 import React, { useRef, useState } from 'react'
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { setTitle } from '../redux/formSlices';
+import { useRouter } from 'next/navigation';
 
 const Header = ({isDisable,setIsDisable,readOnly}) => {
 
   const data = useSelector((state) => state.input.data);
   const formTitle = useSelector((state) => state.input.title);
   const [percentage,setPercentage] = useState(10);
+
+  const router = useRouter();
 
   const formTitileRef = useRef('');
 
@@ -22,6 +26,8 @@ const Header = ({isDisable,setIsDisable,readOnly}) => {
     } else if(!formTitle){
       toast.dismiss()
       toast.error('Form title missing.')
+    } else{
+      router.push('/preview')
     }
   }
 

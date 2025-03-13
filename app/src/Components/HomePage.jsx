@@ -78,7 +78,7 @@ const click = (result)=>{
             
 
       <DragDropContext onDragEnd={dragEnd}>
-      <Droppable droppableId="0" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false} direction='vertical'>
+      <Droppable droppableId="droppable-0" isDropDisabled={false} isCombineEnabled={false} ignoreContainerClipping={false} direction='vertical'>
         {(provided) => (
           <div ref={provided.innerRef} {...provided.droppableProps} className="">
             {reduxData.map((items, index) => (

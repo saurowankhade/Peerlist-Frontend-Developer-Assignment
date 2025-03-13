@@ -421,7 +421,7 @@ useEffect(() => {
         className="absolute shadow-input inset-0 w-full h-full opacity-0 cursor-pointer"
       />
       
-      {/* Custom Input Field */}
+     
       <div
         className="flex shadow-input items-center justify-between w-full p-2 border bg-[#F6F8FA] rounded-[8px] cursor-pointer"
       >
