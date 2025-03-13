@@ -8,8 +8,10 @@ const page = () => {
     const [selectedDate, setSelectedDate] = useState("");
     const dateInputRef = useRef(null);
 
-    const router = useRouter();
+    const [userData,setUserData] = useState([]);
 
+    const router = useRouter();
+ 
     //  redux data
     const reduxData = useSelector((state) => state.input.data);
 

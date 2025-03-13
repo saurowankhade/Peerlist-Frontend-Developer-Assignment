@@ -1,9 +1,12 @@
+import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 
 const Footer = ({isDisable,setIsDisable}) => {
   const data = useSelector((state) => state.input.data);
   const formTitle = useSelector((state) => state.input.title);
+   const router = useRouter();
+
   const saveDraftButton = ()=>{
     const error = data.some((items)=>items?.isQuestion === false);
     if(error) {
@@ -24,6 +27,8 @@ const Footer = ({isDisable,setIsDisable}) => {
     } else if(!formTitle){
       toast.dismiss()
       toast.error('Form title missing.')
+    } else{
+      router.push('/preview')
     }
   }
   return (
